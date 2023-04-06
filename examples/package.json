@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "examples-ssr": "nodemon --experimental-specifier-resolution=node --watch 'ssr/**' --ext 'ts,json' --exec 'node --loader ts-node/esm ssr/index.ts'",
-    "examples-dom": "nodemon --experimental-specifier-resolution=node --watch 'dom/**' --ext 'ts,json' --exec 'node --loader ts-node/esm dom/index.ts'"
+    "dev": "nodemon --experimental-specifier-resolution=node --watch 'src/**' --ext 'ts,json' --exec 'node --loader ts-node/esm src/server.ts'"
   },
   "type": "module",
   "exports": {
