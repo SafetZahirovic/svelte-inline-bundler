@@ -1,21 +1,16 @@
 import { generateDomBundle } from "./generators/dom/index.js";
 import { generateSsrBundle } from "./generators/ssr/index.js";
-import type { CompilerArgs } from "../types";
-
-type BundleResult<T extends "dom" | "ssr"> = T extends "ssr"
-  ? Array<{
-      css: {
-        code: string;
-        map: Map<string, string> | null;
-      };
-      head: string;
-      html: string;
-    }>
-  : Array<string>;
+import { generateHydratableBundle } from "./generators/hydrate/index.js";
+import type { BundleResult, CompilerArgs } from "../types";
 
 export const generateBundle = async <T extends CompilerArgs>(
   args: T
 ): Promise<BundleResult<typeof args["generate"]>> => {
   const { generate } = args;
-  return generate === "dom" ? generateDomBundle(args) : generateSsrBundle(args);
+  //@ts-expect-error ts compiler error
+  return generate === "dom"
+    ? generateDomBundle(args)
+    : generate === "hydrate"
+    ? generateHydratableBundle(args)
+    : generateSsrBundle(args);
 };

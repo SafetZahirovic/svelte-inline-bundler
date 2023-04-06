@@ -9,7 +9,12 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "typeRoots": ["types", "node_modules/@types"],
-    "declaration": true
+    "declaration": true,
+    "allowJs": true
   },
-  "include": ["src/**/*.ts", "**/*.d.ts"]
+  "include": [
+    "src/**/*.ts",
+    "**/*.d.ts",
+    "src/compiler/generators/wrappers/*.js"
+  ]
 }

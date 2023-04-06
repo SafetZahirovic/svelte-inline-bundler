@@ -4,13 +4,15 @@ import sveltePlugin from "esbuild-svelte";
 import { join } from "path";
 import sveltePreprocess from "svelte-preprocess";
 import type { CompilerArgs } from "../../../types";
-import { _dirname } from "../../helpers.js";
+import { END_OF_FUNCTION, START_OF_FUNCTION, _dirname } from "../../helpers.js";
 
-export const generateSsrBundle = async (args: CompilerArgs) => {
-  const { generate, module, name, props } = args;
+export const generateSsrBundle = async (
+  args: Omit<CompilerArgs, "generate">
+) => {
+  const { module, name, props, context = new Map() } = args;
 
   const { outputFiles } = await esbuild.build({
-    entryPoints: ["./generators/ssr/SSRComponentWrapper.js"],
+    entryPoints: ["./generators/wrappers/SSRComponentWrapper.js"],
     bundle: true,
     write: false,
     absWorkingDir: _dirname,
@@ -18,7 +20,7 @@ export const generateSsrBundle = async (args: CompilerArgs) => {
     plugins: [
       sveltePlugin({
         compilerOptions: {
-          generate,
+          generate: "ssr",
           hydratable: true,
           immutable: false,
           css: true,
@@ -30,16 +32,19 @@ export const generateSsrBundle = async (args: CompilerArgs) => {
       replace({
         __data__: JSON.stringify(props),
         __import__: join(process.cwd(), module),
+        __context__: JSON.stringify(context),
         __name__: name,
       }),
     ],
   });
   const outputs = outputFiles.map(({ contents }) =>
     new Function(
-      new TextDecoder()
-        .decode(contents)
-        .slice(`(()=>{`.length, -"})();".length)
-        .concat("return app;")
+      START_OF_FUNCTION.concat(
+        new TextDecoder()
+          .decode(contents)
+          .replace("var app =", "var app; component ="),
+        END_OF_FUNCTION
+      )
     )().render(props)
   );
   return outputs;

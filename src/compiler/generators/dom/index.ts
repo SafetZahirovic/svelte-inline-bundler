@@ -6,15 +6,19 @@ import sveltePreprocess from "svelte-preprocess";
 import { CompilerArgs } from "../../../types";
 import { _dirname } from "../../helpers.js";
 
-export const generateDomBundle = async (args: CompilerArgs) => {
-  const { generate, module, name, props, target } = args;
+export const generateDomBundle = async (
+  args: Omit<CompilerArgs, "generate">
+) => {
+  const { module, name, props, target, context = new Map() } = args;
   let invalidSelector = target && !target?.startsWith("#");
   if (invalidSelector) {
-    console.warn("Target is of wrong type. Target needs to start with `#`.");
+    console.warn(
+      "Target is of wrong type. Target needs to start with `#`. Using `document.body`"
+    );
     invalidSelector = true;
   }
   const { outputFiles } = await esbuild.build({
-    entryPoints: ["./generators/dom/DOMComponentWrapper.js"],
+    entryPoints: ["./generators/wrappers/DOMComponentWrapper.js"],
     bundle: true,
     write: false,
     absWorkingDir: _dirname,
@@ -22,7 +26,7 @@ export const generateDomBundle = async (args: CompilerArgs) => {
     plugins: [
       sveltePlugin({
         compilerOptions: {
-          generate,
+          generate: "dom",
           css: true,
         },
         preprocess: sveltePreprocess(),
@@ -31,6 +35,8 @@ export const generateDomBundle = async (args: CompilerArgs) => {
         __data__: JSON.stringify(props),
         __import__: join(process.cwd(), module),
         __name__: name,
+        __hydrate__: "false",
+        __context__: JSON.stringify(context),
         __target__:
           invalidSelector || !target
             ? "document.body"

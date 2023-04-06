@@ -1,9 +1,10 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "svelte-inline-compiler",
   "author": {
     "email": "zahirovic.safet@gmail.com",
-    "name": "Safet Zahirovic"
+    "name": "Safet Zahirovic",
+    "url": "https://github.com/SafetZahirovic/svelte-inline-compiler.git"
   },
   "license": "MIT",
   "scripts": {
