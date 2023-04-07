@@ -72,16 +72,19 @@ And send `view` as a query parameter like this:
   <li>todo</li>
   <li>virtual-list</li>
   <li>hacker-news</li>
+  <li>smui</li>
 </ol>
+
+`smui` is the most resource heavy because it compiles components from [Svelte Material UI](https://sveltematerialui.com/).
 
 ### Running the server
 
 1.  `cd examples`
 2.  `npm install`
 3.  `npm run dev`
-4.  Go to `localhost:4000/<hydrate> | <ssr> | <dom>/:view`
+4.  Go to <http://localhost:4000>
 
-This should display the view made with `App.svelte` in different bundles.
+This should display the view made with `App.svelte`.
 
 #### List of all example routes
 
@@ -94,6 +97,9 @@ This should display the view made with `App.svelte` in different bundles.
 - <http://localhost:4000/hydratable/hacker-news>
 - <http://localhost:4000/ssr/hacker-news>
 - <http://localhost:4000/dom/hacker-news>
+- <http://localhost:4000/hydratable/smui>
+- <http://localhost:4000/ssr/smui>
+- <http://localhost:4000/dom/smui>
 
 ## Gotchas
 
