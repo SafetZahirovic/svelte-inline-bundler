@@ -52,20 +52,48 @@ type CompilerArgs = {
 
 `examples` folder contains an express server with examples and Svelte view.
 
-`/hydrate` route shows how `hydratable` bundle looks like when served with Express.
+It has 3 views (`todo`, `virtual-list` and `hacker-news`) which all vary in complexity.
+
+To see the views use `base` routes like this:
+
+`/hydratable` route shows how `hydratable` bundle looks like when served with Express.
 
 `/ssr` route shows how `ssr` bundle looks like when served with Express.
 
 `/dom` route shows how `client` bundle looks like when served with Express.
+
+And send `view` as a query parameter like this:
+
+`/hydrate/todo`
+
+#### List of all views
+
+<ol>
+  <li>todo</li>
+  <li>virtual-list</li>
+  <li>hacker-news</li>
+</ol>
 
 ### Running the server
 
 1.  `cd examples`
 2.  `npm install`
 3.  `npm run dev`
-4.  Go to `localhost:4000/<hydrate> | <ssr> | <dom>`
+4.  Go to `localhost:4000/<hydrate> | <ssr> | <dom>/:view`
 
 This should display the view made with `App.svelte` in different bundles.
+
+#### List of all example routes
+
+- <http://localhost:4000/hydratable/todo>
+- <http://localhost:4000/ssr/todo>
+- <http://localhost:4000/dom/todo>
+- <http://localhost:4000/hydratable/virtual-list>
+- <http://localhost:4000/ssr/virtual-list>
+- <http://localhost:4000/dom/virtual-list>
+- <http://localhost:4000/hydratable/hacker-news>
+- <http://localhost:4000/ssr/hacker-news>
+- <http://localhost:4000/dom/hacker-news>
 
 ## Gotchas
 

@@ -10,13 +10,41 @@ const todos = [
   { id: ++lastId, text: "build a Svelte app", done: false },
 ];
 
-router.get("/ssr", async (_req: Request, res: Response) => {
-  const bundle = await generateBundle({
+const viewsAndProps = [
+  {
+    module: "./src/views/hacker-news/App.svelte",
+    props: {},
+    view: "hacker-news",
+  },
+  {
+    module: "./src/views/todo/App.svelte",
     props: {
-      todos,
       lastId,
+      todos,
     },
-    module: "./src/views/App.svelte",
+    view: "todo",
+  },
+  {
+    module: "./src/views/virtual-list/App.svelte",
+    props: {},
+    view: "virtual-list",
+  },
+];
+
+router.get("/ssr/:view", async (req: Request, res: Response) => {
+  const requestedView = req.params["view"];
+
+  if (!viewsAndProps.find(({ view }) => view === requestedView)) {
+    res.send("No views were found for " + requestedView).status(404);
+  }
+
+  const { module, props } = viewsAndProps.find(
+    ({ view }) => view === requestedView
+  )!;
+
+  const bundle = await generateBundle({
+    props,
+    module,
     name: "App",
     generate: "ssr",
   });
@@ -25,25 +53,40 @@ router.get("/ssr", async (_req: Request, res: Response) => {
   res.send(dom);
 });
 
-router.get("/dom", async (_req: Request, res: Response) => {
+router.get("/dom/:view", async (req: Request, res: Response) => {
+  const requestedView = req.params["view"];
+
+  if (!viewsAndProps.find(({ view }) => view === requestedView)) {
+    res.send("No views were found for " + requestedView).status(404);
+  }
+
+  const { module, props } = viewsAndProps.find(
+    ({ view }) => view === requestedView
+  )!;
+
   const bundle = await generateBundle({
-    props: {
-      todos,
-      lastId,
-    },
-    module: "./src/views/App.svelte",
+    props,
+    module,
     name: "App",
     generate: "dom",
   });
+
   res.send(`<script type="module">${bundle}</script>`);
 });
-router.get("/hydratable", async (_req: Request, res: Response) => {
+router.get("/hydratable/:view", async (req: Request, res: Response) => {
+  const requestedView = req.params["view"];
+
+  if (!viewsAndProps.find(({ view }) => view === requestedView)) {
+    res.send("No views were found for " + requestedView).status(404);
+  }
+
+  const { module, props } = viewsAndProps.find(
+    ({ view }) => view === requestedView
+  )!;
+
   const bundle = await generateBundle({
-    props: {
-      todos,
-      lastId,
-    },
-    module: "./src/views/App.svelte",
+    props,
+    module,
     name: "App",
     generate: "hydrate",
   });
