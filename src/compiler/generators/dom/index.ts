@@ -44,5 +44,5 @@ export const generateDomBundle = async (
       }),
     ],
   });
-  return outputFiles.map(({ text }) => text);
+  return outputFiles[0].text;
 };

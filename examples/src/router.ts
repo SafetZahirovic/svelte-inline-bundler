@@ -20,7 +20,7 @@ router.get("/ssr", async (_req: Request, res: Response) => {
     name: "App",
     generate: "ssr",
   });
-  const { css, head, html } = bundle[0];
+  const { css, head, html } = bundle;
   const dom = `<html><head><style>${css.code}</style></head>${html}${head}</html>`;
   res.send(dom);
 });
@@ -50,7 +50,7 @@ router.get("/hydratable", async (_req: Request, res: Response) => {
 
   const { dom, ssr } = bundle;
 
-  res.send(`<body>${ssr[0].html}</body><script>${dom[0]}</script>`);
+  res.send(`<body>${ssr.html}</body><script>${dom}</script>`);
 });
 
 export default router;

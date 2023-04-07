@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.0.5
+
+### Bug Fix
+
+### Features
+
+### Other
+
+- Sped up bundling event further by taking only first element in array of bundled files. As we are bundling only one file.
+
 ## v0.0.4
 
 ### Bug Fix

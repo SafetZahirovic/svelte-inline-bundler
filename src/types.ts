@@ -17,12 +17,12 @@ type SSRBundleResult = {
 };
 
 type HydratableBundleResult = {
-  ssr: Array<SSRBundleResult>;
-  dom: Array<string>;
+  ssr: SSRBundleResult;
+  dom: string;
 };
 
 export type BundleResult<T extends "dom" | "ssr" | "hydrate"> = T extends "ssr"
-  ? Array<SSRBundleResult>
+  ? SSRBundleResult
   : T extends "hydrate"
   ? HydratableBundleResult
-  : Array<string>;
+  : string;

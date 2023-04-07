@@ -7,7 +7,7 @@ export const generateBundle = async <T extends CompilerArgs>(
   args: T
 ): Promise<BundleResult<typeof args["generate"]>> => {
   const { generate } = args;
-  //@ts-expect-error ts compiler error
+
   return generate === "dom"
     ? generateDomBundle(args)
     : generate === "hydrate"
