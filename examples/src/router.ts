@@ -29,7 +29,27 @@ const viewsAndProps = [
     props: {},
     view: "virtual-list",
   },
+  {
+    module: "./src/views/smui/App.svelte",
+    props: {},
+    view: "smui",
+  },
 ];
+
+router.get("/", async (_req: Request, res: Response) => {
+  const bundle = await generateBundle({
+    generate: "hydrate",
+    module: "./src/views/App.svelte",
+    name: "Entry",
+    props: {},
+  });
+
+  const { dom, ssr } = bundle;
+
+  res.send(
+    `<head>${ssr.head}<style>${ssr.css.code}</style></head><body>${ssr.html}</body><script>${dom}</script>`
+  );
+});
 
 router.get("/ssr/:view", async (req: Request, res: Response) => {
   const requestedView = req.params["view"];
@@ -93,7 +113,9 @@ router.get("/hydratable/:view", async (req: Request, res: Response) => {
 
   const { dom, ssr } = bundle;
 
-  res.send(`<body>${ssr.html}</body><script>${dom}</script>`);
+  res.send(
+    `<head>${ssr.head}<style>${ssr.css.code}</style></head><body>${ssr.html}</body><script>${dom}</script>`
+  );
 });
 
 export default router;
