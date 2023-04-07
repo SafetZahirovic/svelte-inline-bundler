@@ -37,12 +37,10 @@ export const generateSsrBundle = async (
       }),
     ],
   });
-  const outputs = outputFiles.map(({ contents }) =>
+  const outputs = outputFiles.map(({ text }) =>
     new Function(
       START_OF_FUNCTION.concat(
-        new TextDecoder()
-          .decode(contents)
-          .replace("var app =", "var app; component ="),
+        text.replace("var app =", "var app; component ="),
         END_OF_FUNCTION
       )
     )().render(props)

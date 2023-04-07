@@ -44,5 +44,5 @@ export const generateDomBundle = async (
       }),
     ],
   });
-  return outputFiles.map(({ contents }) => new TextDecoder().decode(contents));
+  return outputFiles.map(({ text }) => text);
 };

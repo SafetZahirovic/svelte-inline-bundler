@@ -79,20 +79,16 @@ export const generateHydratableBundle = async (
   const { outputFiles: domFiles } = domBundle;
   const { outputFiles: ssrFiles } = ssrBundle;
 
-  const ssr = ssrFiles.map(({ contents }) =>
+  const ssr = ssrFiles.map(({ text }) =>
     new Function(
       START_OF_FUNCTION.concat(
-        new TextDecoder()
-          .decode(contents)
-          .replace("var app =", "var app; component ="),
+        text.replace("var app =", "var app; component ="),
         END_OF_FUNCTION
       )
     )().render(props)
   );
 
-  const dom = domFiles.map(({ contents }) =>
-    new TextDecoder().decode(contents)
-  );
+  const dom = domFiles.map(({ text }) => text);
 
   return { ssr, dom };
 };

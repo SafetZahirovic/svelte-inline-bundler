@@ -1,4 +1,16 @@
-## v0.0.2
+# CHANGELOG
+
+## v0.0.4
+
+### Bug Fix
+
+### Features
+
+### Other
+
+- Sped up bundling a bit with some code cleanup.
+
+## v0.0.3
 
 ### Bug Fix
 
@@ -9,6 +21,8 @@
 - Added README.md.
 - Added `examples` section.
 
+### Other
+
 ## v0.0.2
 
 ### Bug Fix
@@ -17,6 +31,8 @@
 
 ### Features
 
+### Other
+
 ## v0.0.1
 
 ### Bug Fix
@@ -24,3 +40,5 @@
 ### Features
 
 - Initial release
+
+### Other
