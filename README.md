@@ -34,6 +34,7 @@ type CompilerArgs = {
   props?: unknown;
   target?: string;
   context?: Map<string, string>;
+  useCache?: boolean;
 };
 ```
 
@@ -47,6 +48,7 @@ type CompilerArgs = {
 | props    | Props to send to your component.                                                                                                                                                                                                                                   | false    | {}              |
 | target   | Where the `dom` bundle will attach og `hydrate` bundle will hydrate. If you want to attach to some `id` in the dom, use `#` prefix. It uses `document.query` to find the element under the hood. Use: `document.body` or `"#some-id"`. Defaults to `document.body` | false    | `document.body` |
 | context  | Use to send context to the component.                                                                                                                                                                                                                              | false    | `new Map()`     |
+| useCache | Cache built bundles. It significantly speeds load times. Uses `node-cache`.                                                                                                                                                                                        | false    | false           |
 
 ## Examples
 
@@ -85,6 +87,12 @@ And send `view` as a query parameter like this:
 4.  Go to <http://localhost:4000>
 
 This should display the view made with `App.svelte`.
+
+To check the difference between cached and non cached views, send query param `useCache=true|false` on a route.
+
+Example:
+
+`hydratable/smui?useCache=true|false`
 
 #### List of all example routes
 

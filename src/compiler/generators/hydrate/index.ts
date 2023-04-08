@@ -5,11 +5,26 @@ import { join } from "path";
 import sveltePreprocess from "svelte-preprocess";
 import { CompilerArgs } from "../../../types";
 import { END_OF_FUNCTION, START_OF_FUNCTION, _dirname } from "../../helpers.js";
+import { CacheStore } from "../../cache";
 
 export const generateHydratableBundle = async (
-  args: Omit<CompilerArgs, "generate">
+  args: Omit<CompilerArgs, "generate">,
+  cacheStore: CacheStore
 ) => {
-  const { module, name, props, target, context = new Map() } = args;
+  const {
+    module,
+    name,
+    props,
+    target,
+    context = new Map(),
+    useCache = false,
+  } = args;
+
+  const cacheKey = `${name}-hydrate`;
+
+  if (useCache && cacheStore.has(cacheKey)) {
+    return cacheStore.get(cacheKey);
+  }
 
   let invalidSelector = target && !target?.startsWith("#");
   if (invalidSelector) {
@@ -87,6 +102,10 @@ export const generateHydratableBundle = async (
   )().render(props, context);
 
   const dom = domFiles[0].text;
+
+  if (useCache) {
+    cacheStore.set(cacheKey, { ssr, dom });
+  }
 
   return { ssr, dom };
 };

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.0.6
+
+### Bug Fix
+
+### Features
+
+- Add option to cache bundles for faster serving.
+
+### Other
+
 ## v0.0.5
 
 ### Bug Fix

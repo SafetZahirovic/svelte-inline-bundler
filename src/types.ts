@@ -1,13 +1,14 @@
 export type CompilerArgs = {
+  generate: "ssr" | "dom" | "hydrate";
   props: unknown;
   module: string;
   name: string;
   target?: string;
   context?: Map<string, string>;
-  generate: "ssr" | "dom" | "hydrate";
+  useCache?: boolean;
 };
 
-type SSRBundleResult = {
+export type SSRBundleResult = {
   css: {
     code: string;
     map: Map<string, string> | null;
@@ -16,7 +17,7 @@ type SSRBundleResult = {
   html: string;
 };
 
-type HydratableBundleResult = {
+export type HydratableBundleResult = {
   ssr: SSRBundleResult;
   dom: string;
 };

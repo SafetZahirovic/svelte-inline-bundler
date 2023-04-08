@@ -43,6 +43,7 @@ router.get("/", headerMiddleware, async (_req: Request, res: Response) => {
     module: "./src/views/App.svelte",
     name: "Entry",
     props: {},
+    useCache: true,
   });
 
   const { dom, ssr } = bundle;
@@ -60,6 +61,8 @@ router.get(
   "/ssr/:view",
   headerMiddleware,
   async (req: Request, res: Response) => {
+    const useCache = req.query?.useCache;
+
     const requestedView = req.params["view"];
 
     if (!viewsAndProps.find(({ view }) => view === requestedView)) {
@@ -75,6 +78,7 @@ router.get(
       module,
       name: "App",
       generate: "ssr",
+      useCache: useCache !== undefined ? /true/.test(useCache as string) : true,
     });
     const { css, head, html } = bundle;
     const dom = `<html><head><style>${css.code}</style></head>${html}${head}</html>`;
@@ -86,6 +90,8 @@ router.get(
   "/dom/:view",
   headerMiddleware,
   async (req: Request, res: Response) => {
+    const useCache = req.query?.useCache;
+
     const requestedView = req.params["view"];
 
     if (!viewsAndProps.find(({ view }) => view === requestedView)) {
@@ -101,6 +107,7 @@ router.get(
       module,
       name: "App",
       generate: "dom",
+      useCache: useCache !== undefined ? /true/.test(useCache as string) : true,
     });
 
     res.send(`<script type="module">${bundle}</script>`);
@@ -117,6 +124,8 @@ router.get(
       res.send("No views were found for " + requestedView).status(404);
     }
 
+    const useCache = req.query?.useCache;
+
     const { module, props } = viewsAndProps.find(
       ({ view }) => view === requestedView
     )!;
@@ -126,6 +135,7 @@ router.get(
       module,
       name: "App",
       generate: "hydrate",
+      useCache: useCache !== undefined ? /true/.test(useCache as string) : true,
     });
 
     const { dom, ssr } = bundle;
