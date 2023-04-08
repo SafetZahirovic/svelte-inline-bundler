@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import generateBundle from "svelte-inline-compiler";
+import { headerMiddleware } from "./middlewares.js";
 
 const router = express.Router();
 
@@ -36,7 +37,7 @@ const viewsAndProps = [
   },
 ];
 
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", headerMiddleware, async (_req: Request, res: Response) => {
   const bundle = await generateBundle({
     generate: "hydrate",
     module: "./src/views/App.svelte",
@@ -51,71 +52,88 @@ router.get("/", async (_req: Request, res: Response) => {
   );
 });
 
-router.get("/ssr/:view", async (req: Request, res: Response) => {
-  const requestedView = req.params["view"];
-
-  if (!viewsAndProps.find(({ view }) => view === requestedView)) {
-    res.send("No views were found for " + requestedView).status(404);
-  }
-
-  const { module, props } = viewsAndProps.find(
-    ({ view }) => view === requestedView
-  )!;
-
-  const bundle = await generateBundle({
-    props,
-    module,
-    name: "App",
-    generate: "ssr",
-  });
-  const { css, head, html } = bundle;
-  const dom = `<html><head><style>${css.code}</style></head>${html}${head}</html>`;
-  res.send(dom);
+router.get("/api", headerMiddleware, (_req: Request, res: Response) => {
+  res.send("HELLO IT IS WORKING");
 });
 
-router.get("/dom/:view", async (req: Request, res: Response) => {
-  const requestedView = req.params["view"];
+router.get(
+  "/ssr/:view",
+  headerMiddleware,
+  async (req: Request, res: Response) => {
+    const requestedView = req.params["view"];
 
-  if (!viewsAndProps.find(({ view }) => view === requestedView)) {
-    res.send("No views were found for " + requestedView).status(404);
+    if (!viewsAndProps.find(({ view }) => view === requestedView)) {
+      res.send("No views were found for " + requestedView).status(404);
+    }
+
+    const { module, props } = viewsAndProps.find(
+      ({ view }) => view === requestedView
+    )!;
+
+    const bundle = await generateBundle({
+      props,
+      module,
+      name: "App",
+      generate: "ssr",
+    });
+    const { css, head, html } = bundle;
+    const dom = `<html><head><style>${css.code}</style></head>${html}${head}</html>`;
+    res.send(dom);
   }
+);
 
-  const { module, props } = viewsAndProps.find(
-    ({ view }) => view === requestedView
-  )!;
+router.get(
+  "/dom/:view",
+  headerMiddleware,
+  async (req: Request, res: Response) => {
+    const requestedView = req.params["view"];
 
-  const bundle = await generateBundle({
-    props,
-    module,
-    name: "App",
-    generate: "dom",
-  });
+    if (!viewsAndProps.find(({ view }) => view === requestedView)) {
+      res.send("No views were found for " + requestedView).status(404);
+    }
 
-  res.send(`<script type="module">${bundle}</script>`);
-});
-router.get("/hydratable/:view", async (req: Request, res: Response) => {
-  const requestedView = req.params["view"];
+    const { module, props } = viewsAndProps.find(
+      ({ view }) => view === requestedView
+    )!;
 
-  if (!viewsAndProps.find(({ view }) => view === requestedView)) {
-    res.send("No views were found for " + requestedView).status(404);
+    const bundle = await generateBundle({
+      props,
+      module,
+      name: "App",
+      generate: "dom",
+    });
+
+    res.send(`<script type="module">${bundle}</script>`);
   }
+);
 
-  const { module, props } = viewsAndProps.find(
-    ({ view }) => view === requestedView
-  )!;
+router.get(
+  "/hydratable/:view",
+  headerMiddleware,
+  async (req: Request, res: Response) => {
+    const requestedView = req.params["view"];
 
-  const bundle = await generateBundle({
-    props,
-    module,
-    name: "App",
-    generate: "hydrate",
-  });
+    if (!viewsAndProps.find(({ view }) => view === requestedView)) {
+      res.send("No views were found for " + requestedView).status(404);
+    }
 
-  const { dom, ssr } = bundle;
+    const { module, props } = viewsAndProps.find(
+      ({ view }) => view === requestedView
+    )!;
 
-  res.send(
-    `<head>${ssr.head}<style>${ssr.css.code}</style></head><body>${ssr.html}</body><script>${dom}</script>`
-  );
-});
+    const bundle = await generateBundle({
+      props,
+      module,
+      name: "App",
+      generate: "hydrate",
+    });
+
+    const { dom, ssr } = bundle;
+
+    res.send(
+      `<head>${ssr.head}<style>${ssr.css.code}</style></head><body>${ssr.html}</body><script>${dom}</script>`
+    );
+  }
+);
 
 export default router;
