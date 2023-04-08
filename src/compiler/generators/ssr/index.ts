@@ -13,7 +13,7 @@ export const generateSsrBundle = async (
 ) => {
   const { module, name, props, context = new Map(), useCache = false } = args;
 
-  const cacheKey = `${name}-ssr`;
+  const cacheKey = `${name}:${module}:ssr`;
 
   if (useCache && cacheStore.has(cacheKey)) {
     return cacheStore.get(cacheKey);

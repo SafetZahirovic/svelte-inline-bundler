@@ -1,5 +1,7 @@
 # Svelte inline compiler
 
+<https://svelte-inline-compiler-examples.onrender.com/>
+
 This package is geared mainly towards those who want to build a svelte bundle server side. It can compiler `dom`, `ssr` or `hydrate` Svelte bundle. It uses `esbuild` in order to generate a bundle and returns the code.
 
 It provides a way to bundle Svelte code:

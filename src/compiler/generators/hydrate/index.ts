@@ -20,7 +20,7 @@ export const generateHydratableBundle = async (
     useCache = false,
   } = args;
 
-  const cacheKey = `${name}-hydrate`;
+  const cacheKey = `${name}:${module}:hydrate`;
 
   if (useCache && cacheStore.has(cacheKey)) {
     return cacheStore.get(cacheKey);
