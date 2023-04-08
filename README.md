@@ -56,7 +56,7 @@ type CompilerArgs = {
 
 `examples` folder contains an express server with examples and Svelte view.
 
-It has 3 views (`todo`, `virtual-list` and `hacker-news`) which all vary in complexity.
+It has 4 views (`todo`, `virtual-list`, `hacker-news` and `smui`) which all vary in complexity.
 
 To see the views use `base` routes like this:
 
@@ -68,7 +68,7 @@ To see the views use `base` routes like this:
 
 And send `view` as a query parameter like this:
 
-`/hydrate/todo`
+`/hydratable/todo`
 
 #### List of all views
 
