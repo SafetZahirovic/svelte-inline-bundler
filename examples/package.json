@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "nodemon --experimental-specifier-resolution=node --watch 'src/**' --ext 'ts,json' --exec 'node --loader ts-node/esm src/index.ts'",
     "build": "tsc",
-    "start": "node index.js"
+    "start": "node public/index.js"
   },
   "type": "module",
   "exports": {
@@ -33,6 +33,6 @@
     "typescript": "5.0.3"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   }
 }
