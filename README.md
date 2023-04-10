@@ -26,6 +26,47 @@ import createBundle from "svelte-inline-compiler";
 const bundle = await createBundle(options);
 ```
 
+```typescript
+// createBundle will return following
+
+// If building a "ssr" bundle
+
+type SSRBundleResult = {
+  css: {
+    code: string;
+    map: Map<string, string> | null;
+  };
+  head: string;
+  html: string;
+};
+
+// If building a "hydrate" bundle
+
+type HydratableBundleResult = {
+  ssr: SSRBundleResult;
+  dom: string;
+};
+
+// If building a "dom", it will return a string of created bundle
+
+//Examples:
+
+const { css, head, html } = createBundle(...options, {
+  generate: "ssr",
+});
+
+const {
+  ssr: { css, head, html },
+  dom,
+} = createBundle(...options, {
+  generate: "hydrate",
+});
+
+const bundle = createBundle(...options, {
+  generate: "dom",
+});
+```
+
 `createBundle` takes the following options:
 
 ```typescript

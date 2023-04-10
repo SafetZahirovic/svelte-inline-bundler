@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.0.8
+
+### Bug Fix
+
+### Features
+
+### Other
+
+- Update README
+
 ## v0.0.7
 
 ### Bug Fix
@@ -7,6 +17,8 @@
 - Add module name to cache key generation as the old way would cache only one module
 
 ### Features
+
+### Other
 
 ## v0.0.6
 
