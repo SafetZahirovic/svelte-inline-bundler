@@ -3,9 +3,9 @@ import { replace } from "esbuild-plugin-replace";
 import sveltePlugin from "esbuild-svelte";
 import { join } from "path";
 import sveltePreprocess from "svelte-preprocess";
-import { CompilerArgs, SvelteOptions } from "../../../types";
-import { END_OF_FUNCTION, START_OF_FUNCTION, _dirname } from "../../helpers.js";
+import { CompilerArgs } from "../../../types";
 import { CacheStore } from "../../cache";
+import { END_OF_FUNCTION, START_OF_FUNCTION, _dirname } from "../../helpers.js";
 
 export const generateHydratableBundle = async (
   args: Omit<CompilerArgs, "generate">,
@@ -69,13 +69,16 @@ export const generateHydratableBundle = async (
       ],
     }),
     esbuild.build({
+      ...esbuildOptions,
       entryPoints: ["./generators/wrappers/DOMComponentWrapper.js"],
       bundle: true,
       write: false,
       absWorkingDir: _dirname,
       mainFields: ["svelte", "module", "main"],
       plugins: [
+        ...esbuildPlugins,
         sveltePlugin({
+          ...svelteOptions,
           compilerOptions: {
             generate: "dom",
             hydratable: true,

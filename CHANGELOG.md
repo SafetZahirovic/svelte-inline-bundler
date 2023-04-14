@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.0.11
+
+### Bug Fix
+- Add bundler options to places i forgot earlier
+
+### Features
+
+### Other
+
+
 ## v0.0.10
 
 ### Bug Fix
