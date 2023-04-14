@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.0.10
+
+### Bug Fix
+
+### Features
+
+### Other
+
+- Update README
+
 ## v0.0.9
 
 ### Bug Fix
