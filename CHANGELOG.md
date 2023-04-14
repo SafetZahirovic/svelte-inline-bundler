@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v0.0.9
+
+### Bug Fix
+
+### Features
+
+- Add all compiler options for Svelte and Esbuild.
+
+### Other
+
+- Update README
+
 ## v0.0.8
 
 ### Bug Fix

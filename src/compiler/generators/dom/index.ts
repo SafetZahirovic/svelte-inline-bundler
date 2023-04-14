@@ -1,9 +1,9 @@
-import esbuild from "esbuild";
+import esbuild, { type BuildOptions, Plugin } from "esbuild";
 import { replace } from "esbuild-plugin-replace";
 import sveltePlugin from "esbuild-svelte";
 import { join } from "path";
 import sveltePreprocess from "svelte-preprocess";
-import { CompilerArgs } from "../../../types";
+import { CompilerArgs, SvelteOptions } from "../../../types";
 import { _dirname } from "../../helpers.js";
 import { CacheStore } from "../../cache.js";
 
@@ -16,14 +16,18 @@ export const generateDomBundle = async (
     name,
     props,
     target,
+    cacheKey,
     context = new Map(),
     useCache = false,
+    esbuildOptions = {},
+    esbuildPlugins = [],
+    svelteOptions = {},
   } = args;
 
-  const cacheKey = `${name}-dom`;
+  const key = cacheKey ? cacheKey : `${name}:${module}:dom`;
 
-  if (useCache && cacheStore.has(cacheKey)) {
-    return cacheStore.get(cacheKey);
+  if (useCache && cacheStore.has(key)) {
+    return cacheStore.get(key);
   }
 
   let invalidSelector = target && !target?.startsWith("#");
@@ -34,20 +38,24 @@ export const generateDomBundle = async (
     );
     invalidSelector = true;
   }
+
   const generateBundle = async () => {
     return await esbuild.build({
+      ...esbuildOptions,
       entryPoints: ["./generators/wrappers/DOMComponentWrapper.js"],
       bundle: true,
       write: false,
       absWorkingDir: _dirname,
       mainFields: ["svelte", "module", "main"],
       plugins: [
+        ...esbuildPlugins,
         sveltePlugin({
+          ...svelteOptions,
           compilerOptions: {
             generate: "dom",
             css: true,
           },
-          preprocess: sveltePreprocess(),
+          preprocess: sveltePreprocess(svelteOptions?.preprocess),
         }),
         replace({
           __data__: JSON.stringify(props),
@@ -66,7 +74,7 @@ export const generateDomBundle = async (
   const { outputFiles } = await generateBundle();
 
   if (useCache) {
-    cacheStore.set(cacheKey, outputFiles[0].text);
+    cacheStore.set(key, outputFiles[0].text);
   }
 
   return outputFiles[0].text;

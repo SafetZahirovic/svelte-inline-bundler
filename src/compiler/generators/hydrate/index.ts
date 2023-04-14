@@ -3,7 +3,7 @@ import { replace } from "esbuild-plugin-replace";
 import sveltePlugin from "esbuild-svelte";
 import { join } from "path";
 import sveltePreprocess from "svelte-preprocess";
-import { CompilerArgs } from "../../../types";
+import { CompilerArgs, SvelteOptions } from "../../../types";
 import { END_OF_FUNCTION, START_OF_FUNCTION, _dirname } from "../../helpers.js";
 import { CacheStore } from "../../cache";
 
@@ -16,14 +16,18 @@ export const generateHydratableBundle = async (
     name,
     props,
     target,
+    cacheKey,
     context = new Map(),
     useCache = false,
+    esbuildOptions = {},
+    esbuildPlugins = [],
+    svelteOptions = {},
   } = args;
 
-  const cacheKey = `${name}:${module}:hydrate`;
+  const key = cacheKey ? cacheKey : `${name}:${module}:hydrate`;
 
-  if (useCache && cacheStore.has(cacheKey)) {
-    return cacheStore.get(cacheKey);
+  if (useCache && cacheStore.has(key)) {
+    return cacheStore.get(key);
   }
 
   let invalidSelector = target && !target?.startsWith("#");
@@ -36,13 +40,16 @@ export const generateHydratableBundle = async (
 
   const [ssrBundle, domBundle] = await Promise.all([
     esbuild.build({
+      ...esbuildOptions,
       entryPoints: ["./generators/wrappers/SSRComponentWrapper.js"],
       bundle: true,
       write: false,
       absWorkingDir: _dirname,
       mainFields: ["svelte", "module", "main"],
       plugins: [
+        ...esbuildPlugins,
         sveltePlugin({
+          ...svelteOptions,
           compilerOptions: {
             generate: "ssr",
             hydratable: true,
@@ -51,7 +58,7 @@ export const generateHydratableBundle = async (
             preserveComments: false,
             preserveWhitespace: false,
           },
-          preprocess: sveltePreprocess(),
+          preprocess: sveltePreprocess(svelteOptions?.preprocess),
         }),
         replace({
           __data__: JSON.stringify(props),
@@ -73,8 +80,10 @@ export const generateHydratableBundle = async (
             generate: "dom",
             hydratable: true,
             css: true,
+            preserveComments: false,
+            preserveWhitespace: false,
           },
-          preprocess: sveltePreprocess(),
+          preprocess: sveltePreprocess(svelteOptions?.preprocess),
         }),
         replace({
           __data__: JSON.stringify(props),
@@ -104,7 +113,7 @@ export const generateHydratableBundle = async (
   const dom = domFiles[0].text;
 
   if (useCache) {
-    cacheStore.set(cacheKey, { ssr, dom });
+    cacheStore.set(key, { ssr, dom });
   }
 
   return { ssr, dom };

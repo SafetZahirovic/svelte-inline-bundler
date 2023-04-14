@@ -1,7 +1,5 @@
 # Svelte inline compiler
 
-<https://svelte-inline-compiler-examples.onrender.com/>
-
 This package is geared mainly towards those who want to build a svelte bundle server side. It can compiler `dom`, `ssr` or `hydrate` Svelte bundle. It uses `esbuild` in order to generate a bundle and returns the code.
 
 It provides a way to bundle Svelte code:
@@ -11,6 +9,12 @@ It provides a way to bundle Svelte code:
 - `SSR` bundle, which bundles `server side` bundle with server props. See [Svelte Server Component API](https://kit-docs-demo.vercel.app/docs/component-api/server).
 
 - `HYDRATABLE` bundle, which bundles both, and hydrates server side code with client bundle. For more info, look under `hydrate` section in [Svelte Client Component API](https://kit-docs-demo.vercel.app/docs/component-api/server).
+
+## Examples
+
+You can find examples on CodeSandbox here:
+
+https://codesandbox.io/p/sandbox/svelte-inline-compiler-7uek70?file=%2Findex.js
 
 ## Install
 
@@ -78,20 +82,28 @@ type CompilerArgs = {
   target?: string;
   context?: Map<string, string>;
   useCache?: boolean;
+  cacheKey?: string;
+  svelteOptions?: SvelteOptions;
+  esbuildOptions?: EsbuildOptions;
+  esbuildPlugins?: EsbuildPlugins;
 };
 ```
 
 ### Options description
 
-| Member   | Description                                                                                                                                                                                                                                                        | required | default         |
-| :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------- | :-------------- |
-| module   | Path to your `.svelte` component module. It uses relative path to your `package.json`.                                                                                                                                                                             | true     |                 |
-| name     | Name of your module. Used as placeholder inside compiled code.                                                                                                                                                                                                     | true     |                 |
-| generate | Type of bundle to generate.                                                                                                                                                                                                                                        | true     |                 |
-| props    | Props to send to your component.                                                                                                                                                                                                                                   | false    | {}              |
-| target   | Where the `dom` bundle will attach og `hydrate` bundle will hydrate. If you want to attach to some `id` in the dom, use `#` prefix. It uses `document.query` to find the element under the hood. Use: `document.body` or `"#some-id"`. Defaults to `document.body` | false    | `document.body` |
-| context  | Use to send context to the component.                                                                                                                                                                                                                              | false    | `new Map()`     |
-| useCache | Cache built bundles. It significantly speeds load times. Uses `node-cache`.                                                                                                                                                                                        | false    | false           |
+| Member         | Description | required | default |
+| :------------- | :---------- | :------  | :-----  | 
+| module         | Path to your `.svelte` component module. It uses relative path to your `package.json`.                                                                                                                                                                             | true         |                 |
+| name           | Name of your module. Used as placeholder inside compiled code.                                                                                                                                                                                                     | true         |                 |
+| generate       | Type of bundle to generate.                                                                                                                                                                                                                                        | true         |                 |
+| props          | Props to send to your component.                                                                                                                                                                                                                                   | false        | {}              |
+| target         | Where the `dom` bundle will attach og `hydrate` bundle will hydrate. If you want to attach to some `id` in the dom, use `#` prefix. It uses `document.query` to find the element under the hood. Use: `document.body` or `"#some-id"`. Defaults to `document.body` | false        | `document.body` |
+| context        | Use to send context to the component.                                                                                                                                                                                                                              | false        | `new Map()`     |
+| useCache       | Cache built bundles. It significantly speeds load times. Uses `node-cache`.                                                                                                                                                                                        | false        | false           |
+| cacheKey       | Custom cache key. If none provided, the key that will be used follows `${module}:${name}:${generate}` naming convention                                                                                                                                            | false        | undefined       |
+| svelteOptions  | All options from `esbuild-svelte` package except `generate, hydratable, immutable, css, preserveComments, preserveWhitespace` buildOptions. Those are reserverd for the library | false | {}  |
+| esbuildOptions | All `esbuild` options except `entryPoints, write, absWorkingDir, mainFields, plugins`. Those are reserved for the library                          | false | {}  |
+| esbuildPlugins | Extra `esbuild` plugins. | false        | []              |
 
 ## Examples
 

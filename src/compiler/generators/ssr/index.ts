@@ -11,22 +11,35 @@ export const generateSsrBundle = async (
   args: Omit<CompilerArgs, "generate">,
   cacheStore: CacheStore
 ) => {
-  const { module, name, props, context = new Map(), useCache = false } = args;
+  const {
+    module,
+    name,
+    props,
+    cacheKey,
+    context = new Map(),
+    useCache = false,
+    esbuildOptions = {},
+    esbuildPlugins = [],
+    svelteOptions = {},
+  } = args;
 
-  const cacheKey = `${name}:${module}:ssr`;
+  const key = cacheKey ? cacheKey : `${name}:${module}:ssr`;
 
-  if (useCache && cacheStore.has(cacheKey)) {
-    return cacheStore.get(cacheKey);
+  if (useCache && cacheStore.has(key)) {
+    return cacheStore.get(key);
   }
 
   const { outputFiles } = await esbuild.build({
+    ...esbuildOptions,
     entryPoints: ["./generators/wrappers/SSRComponentWrapper.js"],
     bundle: true,
     write: false,
     absWorkingDir: _dirname,
     mainFields: ["svelte", "module", "main"],
     plugins: [
+      ...esbuildPlugins,
       sveltePlugin({
+        ...svelteOptions,
         compilerOptions: {
           generate: "ssr",
           hydratable: true,
@@ -35,7 +48,7 @@ export const generateSsrBundle = async (
           preserveComments: false,
           preserveWhitespace: false,
         },
-        preprocess: sveltePreprocess(),
+        preprocess: sveltePreprocess(svelteOptions?.preprocess),
       }),
       replace({
         __data__: JSON.stringify(props),
@@ -54,7 +67,7 @@ export const generateSsrBundle = async (
   )().render(props, context);
 
   if (useCache) {
-    cacheStore.set(cacheKey, bundle);
+    cacheStore.set(key, bundle);
   }
 
   return bundle;
