@@ -5,6 +5,7 @@ const app = new __name__({
   target: __target__,
   props: __data__,
   hydrate: __hydrate__,
+  hydrate: __context__,
 });
 
 export default app;

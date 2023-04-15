@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v0.0.12
+
+### Bug Fix
+- Add option for context in DOM wrapper
+
+### Features
+
+### Other
+
 ## v0.0.11
 
 ### Bug Fix
