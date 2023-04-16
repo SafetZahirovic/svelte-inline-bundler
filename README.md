@@ -1,6 +1,6 @@
-# Svelte inline compiler
+# Svelte inline bundler
 
-This package is geared mainly towards those who want to build a svelte bundle server side. It can compiler `dom`, `ssr` or `hydrate` Svelte bundle. It uses `esbuild` in order to generate a bundle and returns the code.
+This package is geared mainly towards those who want to build a svelte bundle server side. It can compile `dom`, `ssr` or `hydrate` Svelte bundle. It uses `esbuild` in order to generate a bundle and returns the code.
 
 It provides a way to bundle Svelte code:
 
@@ -14,18 +14,18 @@ It provides a way to bundle Svelte code:
 
 You can find examples on CodeSandbox here:
 
-https://codesandbox.io/p/sandbox/svelte-inline-compiler-7uek70?file=%2Findex.js
+https://codesandbox.io/p/sandbox/svelte-inline-bundler-7uek70?file=%2Findex.js
 
 ## Install
 
-`npm install svelte-inline-compiler`
+`npm install svelte-inline-bundler`
 
 ## Bundling
 
 In order to bundle Svelte app, you need to import the bundler.
 
 ```typescript
-import createBundle from "svelte-inline-compiler";
+import createBundle from "svelte-inline-bundler";
 
 const bundle = await createBundle(options);
 ```

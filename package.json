@@ -1,12 +1,12 @@
 {
-  "version": "0.0.12",
-  "name": "svelte-inline-compiler",
+  "version": "0.0.13",
+  "name": "svelte-inline-bundler",
   "author": {
     "email": "zahirovic.safet@gmail.com",
     "name": "Safet Zahirovic",
-    "url": "https://github.com/SafetZahirovic/svelte-inline-compiler.git"
+    "url": "https://github.com/SafetZahirovic/svelte-inline-bundler.git"
   },
-  "repository": "https://github.com/SafetZahirovic/svelte-inline-compiler",
+  "repository": "https://github.com/SafetZahirovic/svelte-inline-bundler",
   "license": "MIT",
   "scripts": {
     "build": "tsc"
